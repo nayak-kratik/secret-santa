@@ -1,4 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { ExclusionRule } from 'src/modules/exclusion-rule/exclusion-rule.entity';
 import { GiftExchange } from 'src/modules/gift-exchange/gift-exchange.entity';
 import { Participant } from 'src/modules/participant/participant.entity';
 import { User } from 'src/modules/user/user.entity';
@@ -12,5 +13,5 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   database: process.env.PG_DB, // Replace with your PostgreSQL database name
   autoLoadEntities: true, // Automatically load entities
   synchronize: process.env.NODE_ENV === 'development' ? true : false, // Auto-sync schema (disable in production)
-  entities: [User, GiftExchange, Participant],
+  entities: [User, GiftExchange, Participant, ExclusionRule],
 };

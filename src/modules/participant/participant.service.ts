@@ -29,20 +29,20 @@ export class ParticipantService {
       throw new NotFoundException('Either Gift exchange or Participant not found');
     }
     const participant = this.participantRepository.create({
-      giftExchange: exchange,
+      gift_exchange: exchange,
       user: user,
     });
     return this.participantRepository.save(participant);
   }
 
   async findAll(): Promise<Participant[]> {
-    return this.participantRepository.find({ relations: ['giftExchange', 'user'] });
+    return this.participantRepository.find({ relations: ['gift_exchange', 'user'] });
   }
 
   async findOne(id: number): Promise<Participant> {
     const participant = await this.participantRepository.findOne({
       where: { id },
-      relations: ['giftExchange', 'user'],
+      relations: ['gift_exchange', 'user'],
     });
     if (!participant) throw new NotFoundException('Participant not found');
     return participant;

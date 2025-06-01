@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { User } from '../user/user.entity';
 import { Participant } from '../participant/participant.entity';
+import { ExclusionRule } from '../exclusion-rule/exclusion-rule.entity';
 
 @Entity()
 export class GiftExchange {
@@ -25,9 +26,6 @@ export class GiftExchange {
   @Column('decimal', { default: 0 })
   budget: number;
 
-  @OneToMany((_type) => Participant, (participant) => participant.giftExchange)
-  participants: Participant[];
-
   @ManyToOne((_type) => User, (user) => user.gift_exchanges, {
     nullable: false,
     onDelete: 'CASCADE',
@@ -35,6 +33,12 @@ export class GiftExchange {
   })
   @JoinColumn({ name: 'created_by' }) // The foreign key column in the table will be created_by.
   createdBy: User;
+
+  @OneToMany((_type) => Participant, (participant) => participant.gift_exchange)
+  participants: Participant[];
+
+  @OneToMany((_type) => ExclusionRule, (exclusion_rule) => exclusion_rule.gift_exchange)
+  exclusion_rules: ExclusionRule[]; // Each exchange can have multiple exclusions
 
   @CreateDateColumn()
   created_at: Date;
