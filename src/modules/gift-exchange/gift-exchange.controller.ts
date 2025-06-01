@@ -1,17 +1,51 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { CreateGiftExchangeDTO } from './dto/create-gift-exchange.dto';
 import { GiftExchangeService } from './gift-exchange.service';
+import { GiftExchange } from './gift-exchange.entity';
+import { UpdateGiftExchangeDto } from './dto/update-gift-exchange.dto';
 
-@Controller('gift-exchange')
+@Controller('gift-exchanges')
 export class GiftExchangeController {
   constructor(private readonly giftExchangeService: GiftExchangeService) {}
 
   @Post()
-  async create(@Body() createGiftExchangeDTO: CreateGiftExchangeDTO): Promise<{
-    statusCode: number;
-    message: string;
-  }> {
-    await this.giftExchangeService.create(createGiftExchangeDTO);
-    return { statusCode: 123, message: '123' };
+  @HttpCode(HttpStatus.CREATED)
+  async create(@Body() createGiftExchangeDTO: CreateGiftExchangeDTO): Promise<GiftExchange> {
+    return await this.giftExchangeService.create(createGiftExchangeDTO);
+  }
+
+  @Get()
+  async findAll(): Promise<GiftExchange[]> {
+    return this.giftExchangeService.findAll();
+  }
+
+  @Get(':id')
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<GiftExchange> {
+    return this.giftExchangeService.findOne(id);
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateGiftExchangeDto: UpdateGiftExchangeDto,
+  ): Promise<GiftExchange> {
+    return this.giftExchangeService.update(id, updateGiftExchangeDto);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    return this.giftExchangeService.remove(id);
   }
 }

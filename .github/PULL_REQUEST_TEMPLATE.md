@@ -8,16 +8,14 @@
 
 ## 🛠️ Changes Made
 
-<!-- 
+<!--
 List major changes clearly.
 Use bullet points or checkboxes.
 -->
 
-
 ## 🎯 Scope of Impact
 
 <!-- Briefly explain what modules, endpoints, or services are affected. -->
-
 
 ## ✅ Checklist
 
@@ -29,8 +27,6 @@ Use bullet points or checkboxes.
 ## 🧪 Tests
 
 <!-- Describe what tests were added/modified and how they validate the changes. -->
-
-
 
 ## 📸 Screenshots (if applicable)
 
