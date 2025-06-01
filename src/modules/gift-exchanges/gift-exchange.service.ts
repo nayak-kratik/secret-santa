@@ -4,28 +4,28 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { Repository } from 'typeorm';
 import { GiftExchange } from './gift-exchange.entity';
-import { Player } from '../player/player.entity';
+import { User } from '../user/user.entity';
 
 @Injectable()
 export class GiftExchangeService {
   constructor(
     @InjectRepository(GiftExchange)
     private readonly giftExchangeRepository: Repository<GiftExchange>,
-    @InjectRepository(Player)
-    private readonly playerRepository: Repository<Player>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
 
   async create(createGiftExchangeDTO: CreateGiftExchangeDTO): Promise<GiftExchange> {
     const { createdById, ...giftExchangeData } = createGiftExchangeDTO;
 
-    // Fetch player by ID from CreateGiftExchangeDTO
-    const player = await this.playerRepository.findOneBy({ id: createdById });
-    if (!player) throw new NotFoundException('Player not found');
+    // Fetch user by ID from CreateGiftExchangeDTO
+    const user = await this.userRepository.findOneBy({ id: createdById });
+    if (!user) throw new NotFoundException('User not found');
 
     // Create GiftExchange entity
     const giftExchange = this.giftExchangeRepository.create({
       ...giftExchangeData,
-      createdBy: player,
+      createdBy: user,
     });
     return this.giftExchangeRepository.save(giftExchange);
   }

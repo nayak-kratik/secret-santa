@@ -3,10 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { GiftExchange } from './gift-exchange.entity';
 import { GiftExchangeController } from './gift-exchange.controller';
 import { GiftExchangeService } from './gift-exchange.service';
-import { Player } from '../player/player.entity';
+import { User } from '../user/user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([GiftExchange, Player])],
+  imports: [TypeOrmModule.forFeature([GiftExchange, User])],
   controllers: [GiftExchangeController],
   providers: [GiftExchangeService],
 })

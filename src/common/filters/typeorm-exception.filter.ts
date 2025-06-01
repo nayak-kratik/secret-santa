@@ -34,6 +34,16 @@ export class TypeOrmExceptionFilter implements ExceptionFilter {
         });
         break;
 
+      case '23502': // NOT NULL constraint violation
+        response.status(HttpStatus.BAD_REQUEST).json({
+          statusCode: HttpStatus.BAD_REQUEST,
+          error: 'Bad Request',
+          message: 'NOT NULL constraint violation: missing required field',
+          timestamp,
+          path: request.url,
+        });
+        break;
+
       // Add more if needed
       default: // Handle other database errors
         response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({

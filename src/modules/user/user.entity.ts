@@ -6,10 +6,11 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { GiftExchange } from '../gift-exchange/gift-exchange.entity';
+import { GiftExchange } from '../gift-exchanges/gift-exchange.entity';
+import { Participant } from '../participants/participant.entity';
 
 @Entity()
-export class Player {
+export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -21,6 +22,9 @@ export class Player {
 
   @OneToMany((_type) => GiftExchange, (gift_exchange) => gift_exchange.createdBy)
   gift_exchanges: GiftExchange[];
+
+  @OneToMany((_type) => Participant, (participant) => participant.user)
+  participants: Participant[];
 
   @CreateDateColumn()
   created_at: Date;

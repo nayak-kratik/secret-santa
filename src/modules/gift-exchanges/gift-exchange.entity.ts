@@ -4,10 +4,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Player } from '../player/player.entity';
+import { User } from '../user/user.entity';
+import { Participant } from '../participants/participant.entity';
 
 @Entity()
 export class GiftExchange {
@@ -23,13 +25,16 @@ export class GiftExchange {
   @Column('decimal', { default: 0 })
   budget: number;
 
-  @ManyToOne((_type) => Player, (player) => player.gift_exchanges, {
+  @OneToMany((_type) => Participant, (participant) => participant.giftExchange)
+  participants: Participant[];
+
+  @ManyToOne((_type) => User, (user) => user.gift_exchanges, {
     nullable: false,
     onDelete: 'CASCADE',
     eager: true, // optional, if you want createdBy always fetched automatically
   })
   @JoinColumn({ name: 'created_by' }) // The foreign key column in the table will be created_by.
-  createdBy: Player;
+  createdBy: User;
 
   @CreateDateColumn()
   created_at: Date;
