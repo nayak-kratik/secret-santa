@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { GiftExchange } from '../gift-exchange/gift-exchange.entity';
 import { Participant } from '../participant/participant.entity';
 import { CreateExclusionRuleDTO } from './dto/create-exclusion-rule.dto';
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 export class ExclusionRuleService {
   constructor(
@@ -21,7 +21,7 @@ export class ExclusionRuleService {
   async create(createExclusionRuleDto: CreateExclusionRuleDTO): Promise<ExclusionRule> {
     const { gift_exchange_id, participant_id, excluded_participant_id } = createExclusionRuleDto;
     if (participant_id === excluded_participant_id) {
-      throw new Error('A participant cannot exclude themselves.');
+      throw new BadRequestException('A participant cannot exclude themselves.');
     }
 
     const giftExchange = await this.giftExchangeRepo.findOneBy({ id: gift_exchange_id });

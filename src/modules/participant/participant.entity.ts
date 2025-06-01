@@ -6,6 +6,7 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 import { GiftExchange } from '../gift-exchange/gift-exchange.entity';
@@ -13,6 +14,7 @@ import { User } from '../user/user.entity';
 import { ExclusionRule } from '../exclusion-rule/exclusion-rule.entity';
 
 @Entity()
+@Unique(['user', 'gift_exchange']) // Ensures that a user can only participate once in a particular gift exchange
 export class Participant {
   @PrimaryGeneratedColumn()
   id: number;

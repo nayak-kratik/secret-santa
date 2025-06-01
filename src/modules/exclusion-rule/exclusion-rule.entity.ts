@@ -5,6 +5,7 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
 import { GiftExchange } from '../gift-exchange/gift-exchange.entity';
@@ -12,6 +13,9 @@ import { Participant } from '../participant/participant.entity';
 
 @Check(`"participant_id" <> "excluded_participant_id"`)
 // Make sure that participant_id != excluded_participant_id
+@Unique(['participant', 'excluded_participant', 'gift_exchange'])
+// Make sure that same exclusion rule is not replated
+
 @Entity()
 export class ExclusionRule {
   @PrimaryGeneratedColumn()

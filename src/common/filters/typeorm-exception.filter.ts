@@ -11,7 +11,6 @@ export class TypeOrmExceptionFilter implements ExceptionFilter {
 
     // Common timestamp for all responses
     const timestamp = new Date().toISOString();
-
     // Default to 500 Internal Server Error
     switch ((exception as any).code) {
       case '23505': // Unique constraint violation
