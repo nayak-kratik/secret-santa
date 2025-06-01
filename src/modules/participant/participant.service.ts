@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Participant } from './participant.entity';
-import { GiftExchange } from '../gift-exchanges/gift-exchange.entity';
+import { GiftExchange } from '../gift-exchange/gift-exchange.entity';
 import { Repository } from 'typeorm';
 import { User } from '../user/user.entity';
 import { CreateParticipantDTO } from './dto/create-participant.dto';

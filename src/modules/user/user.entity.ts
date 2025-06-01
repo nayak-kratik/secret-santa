@@ -6,8 +6,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { GiftExchange } from '../gift-exchanges/gift-exchange.entity';
-import { Participant } from '../participants/participant.entity';
+import { GiftExchange } from '../gift-exchange/gift-exchange.entity';
+import { Participant } from '../participant/participant.entity';
 
 @Entity()
 export class User {

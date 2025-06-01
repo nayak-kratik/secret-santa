@@ -1,6 +1,6 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { GiftExchange } from 'src/modules/gift-exchanges/gift-exchange.entity';
-import { Participant } from 'src/modules/participants/participant.entity';
+import { GiftExchange } from 'src/modules/gift-exchange/gift-exchange.entity';
+import { Participant } from 'src/modules/participant/participant.entity';
 import { User } from 'src/modules/user/user.entity';
 
 export const typeOrmConfig: TypeOrmModuleOptions = {

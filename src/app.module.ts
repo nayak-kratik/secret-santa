@@ -5,8 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from './config/typeorm.config';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './modules/user/user.module';
-import { GiftExchangeModule } from './modules/gift-exchanges/gift-exchange.module';
-import { ParticipantModule } from './modules/participants/participant.module';
+import { GiftExchangeModule } from './modules/gift-exchange/gift-exchange.module';
+import { ParticipantModule } from './modules/participant/participant.module';
 
 @Module({
   imports: [
