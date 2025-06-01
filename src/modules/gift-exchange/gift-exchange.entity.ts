@@ -9,7 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from '../user/user.entity';
-import { Participant } from '../participants/participant.entity';
+import { Participant } from '../participant/participant.entity';
 
 @Entity()
 export class GiftExchange {

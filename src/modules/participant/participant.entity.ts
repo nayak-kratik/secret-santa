@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { GiftExchange } from '../gift-exchanges/gift-exchange.entity';
+import { GiftExchange } from '../gift-exchange/gift-exchange.entity';
 import { User } from '../user/user.entity';
 
 @Entity()
