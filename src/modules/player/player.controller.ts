@@ -1,4 +1,15 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { CreatePlayerDTO } from './dto/create-player.dto';
 import { PlayerService } from './player.service';
 import { Player } from './player.entity';
@@ -9,7 +20,7 @@ export class PlayerController {
   constructor(private readonly playerService: PlayerService) {}
 
   @Post()
-  @HttpCode(201) // explicitly sets status code
+  @HttpCode(HttpStatus.CREATED) // explicitly sets status code
   async create(@Body() createPlayerDTO: CreatePlayerDTO): Promise<Player> {
     return await this.playerService.create(createPlayerDTO);
   }
@@ -20,17 +31,21 @@ export class PlayerController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: number): Promise<Player> {
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Player> {
     return this.playerService.findOne(id);
   }
 
   @Put(':id')
-  async update(@Param('id') id: number, @Body() dto: UpdatePlayerDto): Promise<Player> {
-    return this.playerService.update(id, dto);
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updatePlayerDto: UpdatePlayerDto,
+  ): Promise<Player> {
+    return this.playerService.update(id, updatePlayerDto);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: number): Promise<void> {
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.playerService.remove(id);
   }
 }

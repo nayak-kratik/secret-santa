@@ -1,4 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { GiftExchange } from 'src/modules/gift-exchange/gift-exchange.entity';
 import { Player } from 'src/modules/player/player.entity';
 
 export const typeOrmConfig: TypeOrmModuleOptions = {
@@ -10,5 +11,5 @@ export const typeOrmConfig: TypeOrmModuleOptions = {
   database: process.env.PG_DB, // Replace with your PostgreSQL database name
   autoLoadEntities: true, // Automatically load entities
   synchronize: process.env.NODE_ENV === 'development' ? true : false, // Auto-sync schema (disable in production)
-  entities: [Player],
+  entities: [Player, GiftExchange],
 };
