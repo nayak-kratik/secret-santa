@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './modules/user/user.module';
 import { GiftExchangeModule } from './modules/gift-exchange/gift-exchange.module';
 import { ParticipantModule } from './modules/participant/participant.module';
+import { ExclusionRuleModule } from './modules/exclusion-rule/exclusion-rule.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { ParticipantModule } from './modules/participant/participant.module';
     UserModule,
     GiftExchangeModule,
     ParticipantModule,
+    ExclusionRuleModule,
   ],
   controllers: [AppController],
   providers: [AppService],
