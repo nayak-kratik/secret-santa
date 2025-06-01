@@ -5,9 +5,11 @@ import { MatchController } from './match.controller';
 import { MatchService } from './match.service';
 import { GiftExchange } from '../gift-exchange/gift-exchange.entity';
 import { User } from '../user/user.entity';
+import { Participant } from '../participant/participant.entity';
+import { Match } from './match.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([GiftExchange, User, MatchModule, ExclusionRule])],
+  imports: [TypeOrmModule.forFeature([GiftExchange, Participant, User, Match, ExclusionRule])],
   controllers: [MatchController],
   providers: [MatchService],
 })

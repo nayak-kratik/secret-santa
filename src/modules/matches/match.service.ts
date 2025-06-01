@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Match } from './match.entity';
 import { Repository } from 'typeorm';
@@ -25,12 +25,26 @@ export class MatchService {
     if (!giftExchange) throw new NotFoundException('GiftExchange not found');
 
     // Validate and fetch giver participant
-    const giver = await this.participantRepository.findOneBy({ id: giverId });
+    const giver = await this.participantRepository.findOne({
+      where: { id: giverId },
+      relations: ['gift_exchange'],
+    });
     if (!giver) throw new NotFoundException('Giver participant not found');
 
     // Validate and fetch receiver participant
-    const receiver = await this.participantRepository.findOneBy({ id: receiverId });
+    const receiver = await this.participantRepository.findOne({
+      where: { id: receiverId },
+      relations: ['gift_exchange'],
+    });
     if (!receiver) throw new NotFoundException('Receiver participant not found');
+
+    // nforce both participants belong to the same exchange as the giftExchange
+    if (
+      giver.gift_exchange.id !== giftExchange.id ||
+      receiver.gift_exchange.id !== giftExchange.id
+    ) {
+      throw new BadRequestException('Giver and receiver must belong to the same gift exchange');
+    }
 
     // Create Match entity with validated relations
     const match = this.matchRepository.create({

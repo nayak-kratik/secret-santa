@@ -8,6 +8,7 @@ import { UserModule } from './modules/user/user.module';
 import { GiftExchangeModule } from './modules/gift-exchange/gift-exchange.module';
 import { ParticipantModule } from './modules/participant/participant.module';
 import { ExclusionRuleModule } from './modules/exclusion-rule/exclusion-rule.module';
+import { MatchModule } from './modules/matches/match.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ExclusionRuleModule } from './modules/exclusion-rule/exclusion-rule.mod
     GiftExchangeModule,
     ParticipantModule,
     ExclusionRuleModule,
+    MatchModule,
   ],
   controllers: [AppController],
   providers: [AppService],
