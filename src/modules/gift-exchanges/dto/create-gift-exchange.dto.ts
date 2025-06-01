@@ -17,5 +17,5 @@ export class CreateGiftExchangeDTO {
 
   @IsInt()
   @IsNotEmpty()
-  createdById: number; // The Player ID who created this exchange
+  createdById: number; // The User ID who created this exchange
 }
