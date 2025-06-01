@@ -4,12 +4,14 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
 import { GiftExchange } from '../gift-exchange/gift-exchange.entity';
 import { Participant } from '../participant/participant.entity';
+import { Match } from '../matches/match.entity';
 
 @Check(`"participant_id" <> "excluded_participant_id"`)
 // Make sure that participant_id != excluded_participant_id
@@ -41,6 +43,9 @@ export class ExclusionRule {
   })
   @JoinColumn({ name: 'excluded_participant_id' })
   excluded_participant: Participant;
+
+  @OneToMany(() => Match, (match) => match.gift_exchange)
+  matches: Match[];
 
   @CreateDateColumn()
   created_at: Date;
