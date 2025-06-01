@@ -11,6 +11,7 @@ import {
 import { User } from '../user/user.entity';
 import { Participant } from '../participant/participant.entity';
 import { ExclusionRule } from '../exclusion-rule/exclusion-rule.entity';
+import { Match } from '../matches/match.entity';
 
 @Entity()
 export class GiftExchange {
@@ -39,6 +40,9 @@ export class GiftExchange {
 
   @OneToMany((_type) => ExclusionRule, (exclusion_rule) => exclusion_rule.gift_exchange)
   exclusion_rules: ExclusionRule[]; // Each exchange can have multiple exclusions
+
+  @OneToMany(() => Match, (match) => match.gift_exchange)
+  matches: Match[];
 
   @CreateDateColumn()
   created_at: Date;
