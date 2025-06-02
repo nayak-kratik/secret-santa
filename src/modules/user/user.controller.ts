@@ -26,8 +26,8 @@ export class UserController {
   }
 
   @Get()
-  async findAll(): Promise<User[]> {
-    return this.userService.findall();
+  async findAllUsers(): Promise<User[]> {
+    return this.userService.findallUsers();
   }
 
   @Get(':id')
