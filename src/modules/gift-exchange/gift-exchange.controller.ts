@@ -44,7 +44,6 @@ export class GiftExchangeController {
   }
 
   @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
     return this.giftExchangeService.remove(id);
   }

@@ -10,8 +10,12 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async validateAdmin(email: string): Promise<boolean> {
+  async validateAdmin(email: string): Promise<{ isAdmin: boolean; id: number | null }> {
     const user = await this.userRepository.findOne({ where: { email } });
-    return !!user && user.role === 'admin';
+    const isAdmin = !!user && user.role === 'admin';
+    return {
+      isAdmin,
+      id: isAdmin ? user.id : null,
+    };
   }
 }

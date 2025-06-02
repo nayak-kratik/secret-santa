@@ -8,8 +8,10 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() authLoginDTO: AuthLoginDTO): Promise<{ isAdmin: boolean }> {
-    const isAdmin = await this.authService.validateAdmin(authLoginDTO.email);
-    return { isAdmin };
+  async login(
+    @Body() authLoginDTO: AuthLoginDTO,
+  ): Promise<{ isAdmin: boolean; id: number | null }> {
+    const adminStatus = await this.authService.validateAdmin(authLoginDTO.email);
+    return adminStatus;
   }
 }

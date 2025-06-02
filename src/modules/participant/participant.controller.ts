@@ -34,7 +34,6 @@ export class ParticipantController {
   }
 
   @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
   async remove(@Param('id', ParseIntPipe) id: number) {
     return this.participantService.remove(id);
   }
