@@ -70,9 +70,10 @@ export class ExclusionRuleService {
     return results;
   }
 
-  async findAll(): Promise<ExclusionRule[]> {
+  async findAllByExchangeId(exchangeId: number) {
     return this.exclusionRuleRepo.find({
-      relations: ['gift_exchange', 'participant', 'excluded_participant'],
+      where: { gift_exchange: { id: exchangeId } },
+      relations: ['participant', 'excluded_participant'],
     });
   }
 

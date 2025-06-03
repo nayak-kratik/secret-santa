@@ -22,9 +22,9 @@ export class ExclusionRuleController {
     return this.exclusionRuleService.createMany(createExclusionRuleDTO);
   }
 
-  @Get()
-  async findAll() {
-    return this.exclusionRuleService.findAll();
+  @Get('exchange/:exchangeId')
+  async findAllByExchangeId(@Param('exchangeId', ParseIntPipe) exchangeId: number) {
+    return this.exclusionRuleService.findAllByExchangeId(exchangeId);
   }
 
   @Delete(':id')
