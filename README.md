@@ -1,98 +1,154 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+   <div style="font-size:5rem; text-align:center">🎅</div>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# Secret Santa Backend (NestJS)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 📖 Overview
 
-## Description
+This is a backend API for managing a Secret Santa gift exchange, built with [NestJS](https://nestjs.com/) and PostgreSQL. It supports user management, gift exchanges, participant management, exclusion rules, and automated Secret Santa matching.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+---
+
+## 📝 Problem Statement
+
+Organizing a Secret Santa event manually is error-prone, especially with exclusions (e.g., "don't match me with my spouse"). This backend automates the process:
+
+- Allows an admin to create a gift exchange.
+- Users can be added and assigned as participants.
+- Exclusion rules can be set (e.g., "A cannot give to B").
+- The system generates valid Secret Santa matches, respecting all exclusions.
+
+---
+
+## ⚙️ Technical Stack
+
+- **Framework:** [NestJS](https://nestjs.com/)
+- **Database:** PostgreSQL (via [TypeORM](https://typeorm.io/))
+- **Validation:** class-validator
+- **API:** RESTful, JSON responses
+
+---
 
 ## Project setup
 
-```bash
-$ npm install
-```
-
-## Compile and run the project
+### 1. **Clone the repository**
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+git clone <your-repo-url>
+cd secret-santa
 ```
 
-## Run tests
+### 2. **Install dependencies**
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm install
 ```
+
+### 3. **Configure environment variables**
+
+Create a `.env` file in the root directory and set your PostgreSQL credentials:
+
+```
+PG_UNAME=your_pg_username
+PG_PW=your_pg_password
+PG_DB=your_pg_database
+NODE_ENV=development
+PORT=3000
+```
+
+### 4. **Run the database**
+
+Make sure PostgreSQL is running and the database exists.
+
+### 5. **Start the server**
+
+```bash
+npm run start:dev
+```
+
+The API will be available at `http://localhost:3001`. PostMan collection available at /documentation
+
+---
+
+## 🏗️ Entity-Relationship Diagram
+
+```mermaid
+erDiagram
+
+  USER ||--o{ GIFT_EXCHANGE : creates
+  USER ||--o{ PARTICIPANT : has
+  GIFT_EXCHANGE ||--o{ PARTICIPANT : includes
+  GIFT_EXCHANGE ||--o{ EXCLUSION_RULE : defines
+  GIFT_EXCHANGE ||--o{ MATCH : results_in
+
+  PARTICIPANT ||--o{ EXCLUSION_RULE : excludes
+  PARTICIPANT ||--o{ MATCH : gives
+  PARTICIPANT ||--o{ MATCH : receives
+
+  EXCLUSION_RULE }o--|| PARTICIPANT : excluded
+  EXCLUSION_RULE }o--|| GIFT_EXCHANGE : belongs_to
+  MATCH }o--|| GIFT_EXCHANGE : for
+  MATCH }o--|| PARTICIPANT : giver
+  MATCH }o--|| PARTICIPANT : receiver
+
+  USER {
+    int id PK
+    string name
+    string email
+    enum role
+    datetime created_at
+    datetime modified_at
+  }
+
+  GIFT_EXCHANGE {
+    int id PK
+    string name
+    string description
+    decimal budget
+    int created_by FK
+    datetime created_at
+    datetime modified_at
+  }
+
+  PARTICIPANT {
+    int id PK
+    int gift_exchange_id FK
+    int user_id FK
+    datetime created_at
+    datetime modified_at
+  }
+
+  EXCLUSION_RULE {
+    int id PK
+    int gift_exchange_id FK
+    int participant_id FK
+    int excluded_participant_id FK
+    datetime created_at
+    datetime modified_at
+  }
+
+  MATCH {
+    int id PK
+    int gift_exchange_id FK
+    int giver_id FK
+    int receiver_id FK
+    datetime created_at
+    datetime modified_at
+  }
+
+```
+
+---
 
 ## Deployment
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+---
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## 📝 Notes
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
+- Exclusion rules are optional.
+- The matching algorithm will throw an error if a valid assignment is not possible due to exclusions.
+- All API responses are JSON.
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+---

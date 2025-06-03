@@ -1,0 +1,62 @@
+erDiagram
+
+  USER ||--o{ GIFT_EXCHANGE : creates
+  USER ||--o{ PARTICIPANT : has
+  GIFT_EXCHANGE ||--o{ PARTICIPANT : includes
+  GIFT_EXCHANGE ||--o{ EXCLUSION_RULE : defines
+  GIFT_EXCHANGE ||--o{ MATCH : results_in
+
+  PARTICIPANT ||--o{ EXCLUSION_RULE : excludes
+  PARTICIPANT ||--o{ MATCH : gives
+  PARTICIPANT ||--o{ MATCH : receives
+
+  EXCLUSION_RULE }o--|| PARTICIPANT : excluded
+  EXCLUSION_RULE }o--|| GIFT_EXCHANGE : belongs_to
+  MATCH }o--|| GIFT_EXCHANGE : for
+  MATCH }o--|| PARTICIPANT : giver
+  MATCH }o--|| PARTICIPANT : receiver
+
+  USER {
+    int id PK
+    string name
+    string email
+    enum role
+    datetime created_at
+    datetime modified_at
+  }
+
+  GIFT_EXCHANGE {
+    int id PK
+    string name
+    string description
+    decimal budget
+    int created_by FK
+    datetime created_at
+    datetime modified_at
+  }
+
+  PARTICIPANT {
+    int id PK
+    int gift_exchange_id FK
+    int user_id FK
+    datetime created_at
+    datetime modified_at
+  }
+
+  EXCLUSION_RULE {
+    int id PK
+    int gift_exchange_id FK
+    int participant_id FK
+    int excluded_participant_id FK
+    datetime created_at
+    datetime modified_at
+  }
+
+  MATCH {
+    int id PK
+    int gift_exchange_id FK
+    int giver_id FK
+    int receiver_id FK
+    datetime created_at
+    datetime modified_at
+  }
