@@ -30,7 +30,6 @@ export class GiftExchange {
   @ManyToOne((_type) => User, (user) => user.gift_exchanges, {
     nullable: false,
     onDelete: 'CASCADE',
-    eager: true, // optional, if you want createdBy always fetched automatically
   })
   @JoinColumn({ name: 'created_by' }) // The foreign key column in the table will be created_by.
   createdBy: User;

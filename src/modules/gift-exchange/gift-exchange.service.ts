@@ -30,8 +30,16 @@ export class GiftExchangeService {
     return this.giftExchangeRepository.save(giftExchange);
   }
 
-  async findAll(): Promise<GiftExchange[]> {
-    return this.giftExchangeRepository.find();
+  async findAllByUserId(userId: number): Promise<GiftExchange[]> {
+    return this.giftExchangeRepository.find({
+      where: { createdBy: { id: userId } },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        budget: true,
+      },
+    });
   }
 
   async findOne(id: number): Promise<GiftExchange> {

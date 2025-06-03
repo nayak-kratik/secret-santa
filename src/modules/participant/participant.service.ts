@@ -43,8 +43,11 @@ export class ParticipantService {
     return this.participantRepository.save(participants);
   }
 
-  async findAll(): Promise<Participant[]> {
-    return this.participantRepository.find({ relations: ['gift_exchange', 'user'] });
+  async findAllByExchangeId(exchangeId: number): Promise<Participant[]> {
+    return this.participantRepository.find({
+      where: { gift_exchange: { id: exchangeId } },
+      relations: ['user'],
+    });
   }
 
   async findOne(id: number): Promise<Participant> {

@@ -25,9 +25,9 @@ export class GiftExchangeController {
     return await this.giftExchangeService.create(createGiftExchangeDTO);
   }
 
-  @Get()
-  async findAll(): Promise<GiftExchange[]> {
-    return this.giftExchangeService.findAll();
+  @Get('user/:userId')
+  async findAllByUserId(@Param('userId', ParseIntPipe) userId: number): Promise<GiftExchange[]> {
+    return this.giftExchangeService.findAllByUserId(userId);
   }
 
   @Get(':id')

@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { ParticipantService } from './participant.service';
 import { CreateParticipantDTO } from './dto/create-participant.dto';
+import { Participant } from './participant.entity';
 
 @Controller('participants')
 export class ParticipantController {
@@ -23,9 +24,11 @@ export class ParticipantController {
     return this.participantService.create(createParticipantDTO);
   }
 
-  @Get()
-  async findAll() {
-    return this.participantService.findAll();
+  @Get('exchange/:exchangeId')
+  async findAllByExchangeId(
+    @Param('exchangeId', ParseIntPipe) exchangeId: number,
+  ): Promise<Participant[]> {
+    return this.participantService.findAllByExchangeId(exchangeId);
   }
 
   @Get(':id')

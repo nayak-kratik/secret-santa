@@ -17,7 +17,7 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  async findallUsers(): Promise<User[]> {
+  async findAllUsers(): Promise<User[]> {
     return this.userRepository.find({
       where: { role: UserRole.USER },
       select: { id: true, name: true, email: true },
