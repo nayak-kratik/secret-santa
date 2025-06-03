@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsEmail, IsInt, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { ArrayNotEmpty, IsEmail, IsInt, IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
 export class CreateParticipantDTO {
   @IsNotEmpty()
@@ -8,7 +8,8 @@ export class CreateParticipantDTO {
   giftExchangeId: number;
 
   @IsNotEmpty()
-  @IsInt()
+  @ArrayNotEmpty()
+  @IsInt({ each: true })
   @Type(() => Number) // <-- This will convert string to number
-  userId: number;
+  userIds: number[];
 }

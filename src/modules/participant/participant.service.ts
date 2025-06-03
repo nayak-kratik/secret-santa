@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Participant } from './participant.entity';
 import { GiftExchange } from '../gift-exchange/gift-exchange.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { User } from '../user/user.entity';
 import { CreateParticipantDTO } from './dto/create-participant.dto';
 
@@ -19,20 +19,28 @@ export class ParticipantService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async create(createParticipantDTO: CreateParticipantDTO): Promise<Participant> {
-    const [exchange, user] = await Promise.all([
-      this.exchangeRepository.findOne({ where: { id: createParticipantDTO.giftExchangeId } }),
-      this.userRepository.findOne({ where: { id: createParticipantDTO.userId } }),
-    ]);
+  async create(createParticipantDTO: CreateParticipantDTO): Promise<Participant[]> {
+    const { giftExchangeId, userIds } = createParticipantDTO;
 
-    if (!exchange || !user) {
-      throw new NotFoundException('Either Gift exchange or Participant not found');
+    // Check if either user or exchang is null
+    const exchange = await this.exchangeRepository.findOne({ where: { id: giftExchangeId } });
+    if (!exchange) throw new NotFoundException('Gift exchange not found');
+
+    // Fetch all users by IDs
+    const users = await this.userRepository.findBy({ id: In(userIds) });
+    if (users.length !== userIds.length) {
+      throw new NotFoundException('One or more users not found');
     }
-    const participant = this.participantRepository.create({
-      gift_exchange: exchange,
-      user: user,
-    });
-    return this.participantRepository.save(participant);
+
+    // Create participants for each user
+    const participants = users.map((user) =>
+      this.participantRepository.create({
+        gift_exchange: exchange,
+        user: user,
+      }),
+    );
+
+    return this.participantRepository.save(participants);
   }
 
   async findAll(): Promise<Participant[]> {
