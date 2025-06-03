@@ -96,7 +96,6 @@ export class MatchService {
 
     // 3. Run your matching algorithm (implement logic to respect exclusions)
     const matches = this.generateMatches(participants, exclusions);
-    console.log(matches, participants, exclusions);
     if (!matches) {
       throw new BadRequestException('No valid match assignment possible with current exclusions.');
     }

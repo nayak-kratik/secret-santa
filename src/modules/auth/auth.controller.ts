@@ -1,6 +1,6 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthLoginDTO } from './dto/auth-login.dto';
+import { AuthDTO } from './dto/auth-login.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -8,10 +8,8 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(
-    @Body() authLoginDTO: AuthLoginDTO,
-  ): Promise<{ isAdmin: boolean; id: number | null }> {
-    const adminStatus = await this.authService.validateAdmin(authLoginDTO.email);
-    return adminStatus;
+  async login(@Body() authDTO: AuthDTO): Promise<{ isAdmin: boolean; id: number | null }> {
+    const admin = await this.authService.getOrCreateAdmin(authDTO);
+    return admin;
   }
 }
