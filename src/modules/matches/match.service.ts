@@ -59,23 +59,28 @@ export class MatchService {
     return this.matchRepository.save(match);
   }
 
-  async findAll(): Promise<Match[]> {
-    return this.matchRepository.find({ relations: ['giftExchange', 'giver', 'receiver'] });
-  }
-
-  async findByExchange(exchangeId: number): Promise<Match[]> {
-    return this.matchRepository.find({
+  async findByExchange(exchangeId: number): Promise<any[]> {
+    const matches = await this.matchRepository.find({
       where: { gift_exchange: { id: exchangeId } },
-      relations: ['giver', 'receiver'],
+      relations: ['giver', 'giver.user', 'receiver', 'receiver.user'],
     });
+
+    // Map to include name and email
+    return matches.map((match) => ({
+      id: match.id,
+      giver: {
+        id: match.giver.id,
+        name: match.giver.user?.name,
+        email: match.giver.user?.email,
+      },
+      receiver: {
+        id: match.receiver.id,
+        name: match.receiver.user?.name,
+        email: match.receiver.user?.email,
+      },
+    }));
   }
 
-  async remove(id: number): Promise<void> {
-    const result = await this.matchRepository.delete(id);
-    if (result.affected === 0) {
-      throw new NotFoundException('Match not found');
-    }
-  }
   async generateAndSaveMatches(exchangeId: number) {
     // 1. Fetch all participants for the exchange
     const participants = await this.participantRepository.find({

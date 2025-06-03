@@ -30,6 +30,11 @@ export class GiftExchangeController {
     return this.giftExchangeService.findAllByUserId(userId);
   }
 
+  @Get('grouped-by-exchange')
+  async findAllGroupedByExchange() {
+    return this.giftExchangeService.findAllGroupedByExchange();
+  }
+
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number): Promise<GiftExchange> {
     return this.giftExchangeService.findOne(id);
