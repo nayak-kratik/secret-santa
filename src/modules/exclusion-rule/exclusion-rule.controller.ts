@@ -1,4 +1,14 @@
-import { Controller, Post, Body, Get, Delete, Param, ParseIntPipe } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Delete,
+  Param,
+  ParseIntPipe,
+  HttpStatus,
+  HttpCode,
+} from '@nestjs/common';
 import { ExclusionRuleService } from './exclusion-rule.service';
 import { CreateExclusionRuleDTO } from './dto/create-exclusion-rule.dto';
 
@@ -7,12 +17,13 @@ export class ExclusionRuleController {
   constructor(private readonly exclusionRuleService: ExclusionRuleService) {}
 
   @Post()
-  create(@Body() createExclusionRuleDTO: CreateExclusionRuleDTO) {
-    return this.exclusionRuleService.create(createExclusionRuleDTO);
+  @HttpCode(HttpStatus.CREATED)
+  async createMany(@Body() createExclusionRuleDTO: CreateExclusionRuleDTO[]) {
+    return this.exclusionRuleService.createMany(createExclusionRuleDTO);
   }
 
   @Get()
-  findAll() {
+  async findAll() {
     return this.exclusionRuleService.findAll();
   }
 

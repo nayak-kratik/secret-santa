@@ -18,31 +18,56 @@ export class ExclusionRuleService {
     private participantRepo: Repository<Participant>,
   ) {}
 
-  async create(createExclusionRuleDto: CreateExclusionRuleDTO): Promise<ExclusionRule> {
-    const { gift_exchange_id, participant_id, excluded_participant_id } = createExclusionRuleDto;
-    if (participant_id === excluded_participant_id) {
-      throw new BadRequestException('A participant cannot exclude themselves.');
+  async createMany(dtos: CreateExclusionRuleDTO[]): Promise<ExclusionRule[]> {
+    const results: ExclusionRule[] = [];
+    for (const dto of dtos) {
+      const { gift_exchange_id, participant_id, excluded_participant_id } = dto;
+      if (participant_id === excluded_participant_id) {
+        throw new BadRequestException('A participant cannot exclude themselves.');
+      }
+
+      const giftExchange = await this.giftExchangeRepo.findOneBy({ id: gift_exchange_id });
+      if (!giftExchange) throw new NotFoundException('Gift Exchange not found');
+
+      const participant = await this.participantRepo.findOne({
+        where: { id: participant_id },
+        relations: ['gift_exchange'],
+      });
+      const excludedParticipant = await this.participantRepo.findOne({
+        where: { id: excluded_participant_id },
+        relations: ['gift_exchange'],
+      });
+
+      if (!participant || !excludedParticipant) {
+        throw new NotFoundException('Participant(s) not found');
+      }
+
+      if (
+        participant.gift_exchange.id !== gift_exchange_id ||
+        excludedParticipant.gift_exchange.id !== gift_exchange_id
+      ) {
+        throw new BadRequestException('Both participants must belong to the same gift exchange.');
+      }
+
+      const existing = await this.exclusionRuleRepo.findOne({
+        where: {
+          gift_exchange: { id: gift_exchange_id },
+          participant: { id: participant_id },
+          excluded_participant: { id: excluded_participant_id },
+        },
+      });
+      if (existing) {
+        throw new BadRequestException('This exclusion rule already exists.');
+      }
+
+      const exclusionRule = this.exclusionRuleRepo.create({
+        gift_exchange: giftExchange,
+        participant,
+        excluded_participant: excludedParticipant,
+      });
+      results.push(await this.exclusionRuleRepo.save(exclusionRule));
     }
-
-    const giftExchange = await this.giftExchangeRepo.findOneBy({ id: gift_exchange_id });
-    if (!giftExchange) throw new NotFoundException('Gift Exchange not found');
-
-    const participant = await this.participantRepo.findOneBy({ id: participant_id });
-    const excludedParticipant = await this.participantRepo.findOneBy({
-      id: excluded_participant_id,
-    });
-
-    if (!participant || !excludedParticipant) {
-      throw new NotFoundException('Participant(s) not found');
-    }
-
-    const exclusionRule = this.exclusionRuleRepo.create({
-      gift_exchange: giftExchange,
-      participant,
-      excluded_participant: excludedParticipant,
-    });
-
-    return this.exclusionRuleRepo.save(exclusionRule);
+    return results;
   }
 
   async findAll(): Promise<ExclusionRule[]> {
