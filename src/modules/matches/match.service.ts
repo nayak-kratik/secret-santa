@@ -129,6 +129,7 @@ export class MatchService {
 
   private generateMatches(participants, exclusions) {
     // Get array of participant IDs
+    // Get array of participant IDs
     const participantIds = participants.map((p) => p.id);
 
     // Get array of exclusion pairs: { participantId, excludedParticipantId }
@@ -137,42 +138,71 @@ export class MatchService {
       excludedParticipantId: e.excluded_participant.id,
     }));
 
-    // Check if one participant is excluded from giving to another
+    // Helper to check if a giver is excluded from giving to a receiver
     const isExcluded = (giver: number, receiver: number): boolean => {
       return exclusionPairs.some(
         ({ participantId, excludedParticipantId }) =>
-          (giver === participantId && receiver === excludedParticipantId) ||
-          (receiver === participantId && giver === excludedParticipantId),
+          giver === participantId && receiver === excludedParticipantId,
       );
     };
 
-    const assignedGiftees = new Set<number>(); // Keep track of people who already got gifts
-    const assignments: [number, number][] = []; // Final result [gifter, giftee]
+    // const assignedGiftees = new Set<number>(); // Keep track of people who already got gifts
+    // const assignments: [number, number][] = []; // Final result [gifter, giftee]
+    // Old logic fails sometimes
+    // for (const gifter of participantIds) {
+    //   let foundGiftee = false;
 
-    for (const gifter of participantIds) {
-      let foundGiftee = false;
+    //   for (const giftee of participantIds) {
+    //     // Skip if:
+    //     // - same person
+    //     // - giftee already assigned to someone
+    //     // - exclusion rule applies
+    //     if (giftee === gifter || assignedGiftees.has(giftee) || isExcluded(gifter, giftee)) {
+    //       continue;
+    //     }
 
-      for (const giftee of participantIds) {
-        // Skip if:
-        // - same person
-        // - giftee already assigned to someone
-        // - exclusion rule applies
-        if (giftee === gifter || assignedGiftees.has(giftee) || isExcluded(gifter, giftee)) {
-          continue;
-        }
+    //     // Found a valid giftee
+    //     assignments.push([gifter, giftee]);
+    //     assignedGiftees.add(giftee);
+    //     foundGiftee = true;
+    //     break;
+    //   }
 
-        // Found a valid giftee
-        assignments.push([gifter, giftee]);
-        assignedGiftees.add(giftee);
-        foundGiftee = true;
-        break;
+    //   // If no giftee could be found for a gifter, the assignment fails
+    //   if (!foundGiftee) {
+    //     return null;
+    //   }
+    // }
+    // return assignments;
+
+    function backtrack(
+      givers: number[],
+      receivers: number[],
+      assignment: [number, number][] = [],
+    ): [number, number][] | null {
+      // Base case: all givers have been assigned
+      if (givers.length === 0) return assignment;
+
+      const giver = givers[0];
+      // Try every possible receiver for the current giver
+      for (const receiver of receivers) {
+        // Skip if giver is the same as receiver or if exclusion rule applies
+        if (giver === receiver || isExcluded(giver, receiver)) continue;
+
+        // Recursively assign the rest
+        const result = backtrack(
+          givers.slice(1), // Remove this giver from the list
+          receivers.filter((r) => r !== receiver), // Remove this receiver from the list
+          [...assignment, [giver, receiver]], // Add this assignment
+        );
+        // If a valid assignment is found, return it
+        if (result) return result;
       }
-
-      // If no giftee could be found for a gifter, the assignment fails
-      if (!foundGiftee) {
-        return null;
-      }
+      // No valid assignment found for this configuration
+      return null;
     }
-    return assignments;
+
+    // Start the backtracking with all participants as both givers and receivers
+    return backtrack(participantIds, participantIds);
   }
 }

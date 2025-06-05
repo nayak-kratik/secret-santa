@@ -20,7 +20,7 @@ RUN npm run build
 EXPOSE 8080
 
 # CMD is the default command to run inside the container.
-CMD ["node", "dist/main"]
+CMD ["sh", "-c", "npm run migration:run && node dist/main.js"]
 
 
 

@@ -68,7 +68,7 @@ Make sure PostgreSQL is running and the database exists.
 npm run start:dev
 ```
 
-The API will be available at `http://localhost:3001`. PostMan collection available at /documentation
+The API will be available at `http://localhost:8080`. PostMan collection available at /documentation
 
 ---
 

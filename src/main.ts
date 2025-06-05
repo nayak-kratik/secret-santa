@@ -11,13 +11,14 @@ async function bootstrap() {
 
   // Enable CORS for all origins (or specify origin: 'http://localhost:3000' for more security)
   app.enableCors({
-    origin: ['http://localhost:3000', 'https://secret-santa-fe-823813087965.europe-west1.run.app'],
+    origin: ['http://localhost:3000', 'https://secret-santa-fe-823813087965.us-central1.run.app'],
     credentials: true,
   });
 
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new HttpExceptionFilter(), new TypeOrmExceptionFilter());
   app.useGlobalInterceptors(new ResponseInterceptor());
+
   const port = process.env.PORT || 8080;
   await app.listen(port);
 }
