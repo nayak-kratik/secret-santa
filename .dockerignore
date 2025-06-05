@@ -1,0 +1,23 @@
+.env
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Build artifacts
+dist
+build
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Docker-related files you don’t want copied
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+.git
+.gitignore
+
+# Editor folders
+.vscode
